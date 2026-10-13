@@ -1,0 +1,26 @@
+# 生产环境覆盖配置（spring.profiles.active=prod）
+# - 必须通过环境变量提供 DB_PASSWORD / JWT_SECRET / DATA_ENCRYPTION_KEY
+# - 默认关闭调试验证码和宽泛 CORS
+
+spring:
+  datasource:
+    password: ${DB_PASSWORD}
+
+logging:
+  level:
+    com.pintu: info
+    org.springframework: warn
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+security:
+  verification:
+    expose-debug-code: false
+
+pintu:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}

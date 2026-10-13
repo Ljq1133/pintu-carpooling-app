@@ -1,0 +1,23 @@
+# 自动化测试覆盖配置（spring.profiles.active=test）
+# 使用 H2 内存数据库，关闭 Flyway 自动迁移以加速
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:pintu;MODE=MySQL;DB_CLOSE_DELAY=-1
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  flyway:
+    enabled: false
+  jpa:
+    open-in-view: false
+
+security:
+  jwt:
+    secret: test-only-secret-${random.value}
+  verification:
+    expose-debug-code: true
+
+pintu:
+  cors:
+    allowed-origins: http://localhost

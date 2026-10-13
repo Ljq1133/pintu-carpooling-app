@@ -1,0 +1,128 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: pintu-backend
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/pintu?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:test-password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  sql:
+    init:
+      mode: never
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 1
+    validate-on-migrate: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm
+    time-zone: Asia/Shanghai
+    serialization:
+      write-dates-as-timestamps: false
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: input
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+security:
+  data-encryption-key: ${DATA_ENCRYPTION_KEY:}
+  jwt:
+    secret: ${JWT_SECRET:dev-only-pintu-jwt-secret-change-me-2026}
+    access-ttl-minutes: ${JWT_ACCESS_TTL_MINUTES:15}
+    refresh-ttl-days: ${JWT_REFRESH_TTL_DAYS:30}
+  verification:
+    provider: ${SMS_PROVIDER:mock}
+    ttl-minutes: ${VERIFICATION_CODE_TTL_MINUTES:5}
+    resend-seconds: ${VERIFICATION_CODE_RESEND_SECONDS:60}
+    max-attempts: ${VERIFICATION_CODE_MAX_ATTEMPTS:5}
+    expose-debug-code: ${VERIFICATION_EXPOSE_DEBUG_CODE:true}
+  login:
+    max-failures: ${LOGIN_MAX_FAILURES:5}
+    lock-minutes: ${LOGIN_LOCK_MINUTES:15}
+  rate-limit:
+    auth-max-requests: ${AUTH_RATE_LIMIT_MAX_REQUESTS:30}
+    window-seconds: ${AUTH_RATE_LIMIT_WINDOW_SECONDS:60}
+
+logging:
+  level:
+    com.pintu: debug
+    org.springframework.web: info
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  info:
+    env:
+      enabled: true
+    git:
+      mode: simple
+  metrics:
+    tags:
+      application: pintu-backend
+
+identity:
+  verification:
+    provider: ${IDENTITY_VERIFICATION_PROVIDER:mock}
+
+storage:
+  local:
+    root: ${OBJECT_STORAGE_ROOT:./data/objects}
+
+map:
+  provider: ${MAP_PROVIDER:mock}
+  cache-ttl-seconds: ${MAP_CACHE_TTL_SECONDS:300}
+  max-attempts: ${MAP_MAX_ATTEMPTS:2}
+  timeout-ms: ${MAP_TIMEOUT_MS:1500}
+
+pricing:
+  base-price: ${PRICING_BASE_PRICE:6.00}
+  distance-rate: ${PRICING_DISTANCE_RATE:1.80}
+  duration-rate: ${PRICING_DURATION_RATE:0.25}
+  extra-passenger-rate: ${PRICING_EXTRA_PASSENGER_RATE:2.00}
+
+matching:
+  radius-km: ${MATCHING_RADIUS_KM:3.0}
+  time-window-minutes: ${MATCHING_TIME_WINDOW_MINUTES:45}
+  minimum-overlap: ${MATCHING_MINIMUM_OVERLAP:60}
+  minimum-credit: ${MATCHING_MINIMUM_CREDIT:60}
+  request-expiry-minutes: ${MATCHING_REQUEST_EXPIRY_MINUTES:120}
+  weights:
+    route: ${MATCHING_WEIGHT_ROUTE:0.45}
+    time: ${MATCHING_WEIGHT_TIME:0.25}
+    credit: ${MATCHING_WEIGHT_CREDIT:0.20}
+    price: ${MATCHING_WEIGHT_PRICE:0.10}

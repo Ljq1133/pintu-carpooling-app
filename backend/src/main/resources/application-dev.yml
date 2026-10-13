@@ -1,0 +1,19 @@
+# 开发环境覆盖配置（spring.profiles.active=dev）
+# 演示数据库、放宽日志、暴露调试验证码
+
+spring:
+  datasource:
+    password: ${DB_PASSWORD:dev-only-password}
+
+logging:
+  level:
+    com.pintu: debug
+    org.springframework.web: debug
+
+security:
+  verification:
+    expose-debug-code: true
+
+pintu:
+  cors:
+    allowed-origins: http://127.0.0.1:5173,http://localhost:5173,http://127.0.0.1:4173,http://localhost:4173
